@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="indigo_500">#4169E1</color>
+    <color name="indigo_700">#303f9f</color>
+    <color name="pink_200">#ff4081</color>
+    <color name="pink_400">#f50057</color>
+    <color name="DoderBlue">#1E90FF</color>
+    <color name="Yellow">#EEEE00</color>
+
+
+    <color name="color_item1">#FF4081</color>
+    <color name="color_item2">#1E90FF</color>
+    <color name="color_item3">#00FF7F</color>
+    <color name="color_item4">#CD5C5C</color>
+    <color name="color_item5">#FFA500</color>
+    <color name="color_item6">#A020F0</color>
+    <color name="color_item7">#FF82AB</color>
+    <color name="color_item8">#F4A460</color>
+</resources>
