@@ -11,6 +11,9 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -74,7 +77,7 @@ public class MyView extends RelativeLayout {
     }
     private void addDrawable(PointF pointF){
         params = new LayoutParams(dWidth,dHeight);
-        params.width = params.height = 50;
+        params.width = params.height = 30;
         params.leftMargin = (int) ((pointF.x - params.width/2));
         params.topMargin = (int) ((pointF.y - params.width/2));
         imageView.setImageDrawable(drawables[random.nextInt(3)]);
@@ -84,14 +87,14 @@ public class MyView extends RelativeLayout {
 
     }
     private AnimatorSet getObjectAnimator(ImageView imageView){
-        ObjectAnimator animX = ObjectAnimator.ofFloat(imageView,"translationX",0.0f,1.0f);
-        ObjectAnimator  animY = ObjectAnimator.ofFloat(imageView,"translationY",0.0f,1.0f);
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(imageView,"alpha",0.0f,1.0f);
+        ObjectAnimator  scaleX = ObjectAnimator.ofFloat(imageView,"scaleX",0.2f,1.0f);
+        ObjectAnimator  scaleY = ObjectAnimator.ofFloat(imageView,"scaleY",0.2f,1.0f);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(animX,animY,alpha);
+        animatorSet.playTogether(scaleX,scaleY);
         ValueAnimator animator = getValeAnimation(imageView,pointF);
+        ValueAnimator animator1 = getValeAnimation2(imageView,pointF);
         AnimatorSet set = new AnimatorSet();
-        set.playSequentially(animatorSet,animator);
+        set.playTogether(animatorSet,animator1);
         set.setTarget(imageView);
         return set;
     }
@@ -120,16 +123,56 @@ public class MyView extends RelativeLayout {
 
         ValueEvalutor evalutor = new ValueEvalutor(pointFc1,pointFc2);
         ValueAnimator animator = ValueAnimator.ofObject(evalutor,pointF0,pointFe);
-        animator.setDuration(3000);
+        animator.setDuration(2000);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 PointF pointF1 = (PointF) animation.getAnimatedValue();
                 imageView.setX(pointF1.x);
                 imageView.setY(pointF1.y);
+                imageView.setAlpha(1-animation.getAnimatedFraction());
             }
         });
 
         return animator;
     }
+
+    private ValueAnimator getValeAnimation2(final ImageView imageView, final PointF pointF){
+        PointF pointF0 = new PointF();
+        pointF0.x = pointF.x - params.width/2;
+        pointF0.y = pointF.y - params.width/2;
+
+        PointF pointFc1 = new PointF();
+        PointF pointFe = new PointF(mWidth - 150,mHeight-100);
+
+        if(pointF0.x <= mWidth/2 && pointF0.y<=mHeight/2){
+            pointFc1.x = pointF.x + params.width*2;
+            pointFc1.y = pointF.y/2;
+        }else if(pointF0.x > mWidth/2 && pointF0.y<=mHeight/2){
+            pointFc1.x = pointF.x - params.width/2;
+            pointFc1.y = pointF.y/2;
+        }else if(pointF0.x <0.8*mWidth && pointF0.y>=mHeight/2){
+            pointFc1.x = pointF.x + params.width*2;
+            pointFc1.y = pointF.y/2;
+        }else if(pointF0.x > 0.8*mWidth && pointF0.y>mHeight/2){
+            pointFc1.x = pointF.x - params.width/2;
+            pointFc1.y = pointF.y - params.width/2;
+        }
+       SeValueEvalutor evalutor = new SeValueEvalutor(pointFc1);
+        ValueAnimator animator = ValueAnimator.ofObject(evalutor,pointF0,pointFe);
+        animator.setDuration(3000);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                PointF pointF1 = (PointF) animation.getAnimatedValue();
+                imageView.setX(pointF1.x);
+                imageView.setY(pointF1.y);
+                imageView.setAlpha(1-animation.getAnimatedFraction()/2);
+            }
+        });
+        return animator;
+    }
+
+
 }
